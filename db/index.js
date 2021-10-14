@@ -1,5 +1,7 @@
 const inquirer = require('inquirer');
 const fs = require('fs');
+const Department = require('./lib/Department');
+const Role = require('./lib/Role');
 
 const allEmployees = [];
 
@@ -71,3 +73,34 @@ addRole = () => {
         mainPrompt();
     })
 }
+
+addEmployee = () => {
+    inquirer.prompt([
+        {
+            type: 'input',
+            message: 'What is the employee\'s first name?',
+            name: 'firstName'
+        },
+        {
+            type: 'input',
+            message: 'What is the employee\'s last name?',
+            name: 'lastName'
+        },
+        {
+            type: 'input',
+            message: 'What is the employee\'s role?',
+            name: 'employeeRole'
+        },
+        {
+            type: 'input',
+            message: 'Who is the employee\'s manager?',
+            name: 'employeeManager'
+        },
+    ]) .then((data) => {
+        const employee = new Employee(somethinghere);
+        allEmployees.push(employee);
+        mainPrompt();
+    })
+}
+
+init();

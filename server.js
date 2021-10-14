@@ -21,6 +21,71 @@ const db = mysql.createConnection(
       console.log(`Connected to the employees_db database.`)
 );
 
+app.post('/api/new-department', ({ body }, res) => {
+    const sql = `INSERT INTO department (department_name)
+        VALUES (?)`;
+    const params = [body.department_name];
+
+    db.query(sql, params, (err, res) => {
+        if (err) {
+            res.status(400).json({ error: err.message });
+            return;
+        }
+        res.json({
+            message: 'success',
+            data: body
+        });
+    });
+});
+
+app.post('/api/new-role', ({ body }, res) => {
+    const sql = `INSERT INTO employee_role (title)
+        VALUES (?)`;
+    const params = [body.title];
+
+    db.query(sql, params, (err, res) => {
+        if (err) {
+            res.status(400).json({ error: err.message });
+            return;
+        }
+        res.json({
+            message: 'success',
+            data: body
+        });
+    });
+});
+
+app.post('/api/new-employee', ({ body }, res) => {
+    const sql = `INSERT INTO employee (first_name)
+        VALUES (?)`;
+    const params = [body.employee];
+
+    db.query(sql, params, (err, res) => {
+        if (err) {
+            res.status(400).json({ error: err.message });
+            return;
+        }
+        res.json({
+            message: 'success',
+            data: body
+        });
+    });
+});
+
+// app.get('/api/employees', (req, res) => {
+//     const sql = `SELECT id, department_name AS department FROM department`;
+  
+//     db.query(sql, (err, rows) => {
+//       if (err) {
+//         res.status(500).json({ error: err.message });
+//          return;
+//       }
+//       res.json({
+//         message: 'success',
+//         data: rows
+//       });
+//     });
+//   });
 
 app.use((req, res) => {
     res.status(404).end();
