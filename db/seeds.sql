@@ -16,5 +16,10 @@ VALUES  ("Salesperson", 80000, 1),
 INSERT INTO employee (first_name, last_name, role_id)
 VALUES  ("Karen", "Smith", 1),
         ("Lucy", "Greene", 2),
+        ("John", "Woodard", 4),
+        ("Bob", "Hope", 2),
+        ("Sally", "Miller", 3)
 
-UPDATE `employee_db`.`employee` SET `manager_id` = '1' WHERE (`id` > '1');
+UPDATE `employee_db`.`employee` 
+SET `manager_id` = '1' 
+WHERE (`id` > '1');

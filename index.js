@@ -2,6 +2,26 @@ const inquirer = require('inquirer');
 const fs = require('fs');
 const cTable = require('console.table');
 
+const PORT = process.env.PORT || 3001;
+const app = express();
+
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+
+app.use(express.static('public'));
+
+const db = mysql.createConnection(
+    {
+        host: 'localhost',
+        // MySQL username
+        user: 'root',
+        // MySQL password
+        password: '123coding456!',
+        database: 'employee_db'
+      },
+      console.log(`Connected to the employees_db database.`)
+);
+
 init = () => {
     mainPrompt();
 }
@@ -135,5 +155,13 @@ addEmployee = () => {
         mainPrompt();
     })
 }
+
+app.use((req, res) => {
+    res.status(404).end();
+  });
+  
+app.listen(PORT, () => {
+console.log(`Server running on port http://localhost:${PORT}`);
+});
 
 init();

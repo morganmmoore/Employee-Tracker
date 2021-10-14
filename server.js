@@ -1,5 +1,6 @@
 const express = require('express');
-const mysql = requre('mysql2');
+const mysql = require('mysql2');
+const table = require('console.table');
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -15,7 +16,7 @@ const db = mysql.createConnection(
         // MySQL username
         user: 'root',
         // MySQL password
-        password: '',
+        password: '123coding456!',
         database: 'employees_db'
       },
       console.log(`Connected to the employees_db database.`)
