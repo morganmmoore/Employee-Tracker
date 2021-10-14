@@ -1,9 +1,6 @@
 const inquirer = require('inquirer');
 const fs = require('fs');
-const Department = require('./lib/Department');
-const Role = require('./lib/Role');
-
-const allEmployees = [];
+const cTable = require('console.table');
 
 init = () => {
     mainPrompt();
@@ -37,18 +34,21 @@ mainPrompt = () => {
 }
 
 addDepartment = () => {
-    inquirer.prompt([
-        {
-            type: 'input',
-            message: 'What is the name of the department?',
-            name: 'department'
-        },
-    ]) .then((data) => {
-        const department = new Department(somethinghere);
-        allEmployees.push(department);
-        mainPrompt();
+    db.query(`SELECT department_name AS "Departments" FROM department`, (err, res) => {
+        if (err) throw err;
+
+        inquirer.prompt([
+            {
+                type: 'input',
+                message: 'What is the name of the department?',
+                name: 'dept'
+            },
+        ]) .then((data) => {
+            db.query(`INSERT INTO department(department_name) VALUES( ? )`, data.dept)
+            mainPrompt();
+        })
     })
-}
+}   
 
 addRole = () => {
     db.query(`SELECT * FROM department`, function (err, res) {
@@ -72,12 +72,12 @@ addRole = () => {
             },
             {
                 type: 'list',
+                message: 'Select the department',
                 name: 'dept',
                 choices: function () {
                     const choiceArr = data[1].map(choice => choice.department_name);
                     return choiceArr;
                 },
-                message: 'Select the department'
             }
         ]) .then((data) => {
                 db.query(`INSERT INTO employee_role(title, salary, department_id)
@@ -90,6 +90,7 @@ addRole = () => {
 }
 
 addEmployee = () => {
+    db.query(`SELECT * from roles; SELECT CONCAT (employee.first_name," ",employee.last_name) AS full_name FROM employee`)
     inquirer.prompt([
         {
             type: 'input',
@@ -102,9 +103,13 @@ addEmployee = () => {
             name: 'lastName'
         },
         {
-            type: 'input',
+            type: 'list',
             message: 'What is the employee\'s role?',
-            name: 'employeeRole'
+            name: 'employeeRole',
+            choices: function () {
+                const choiceArr = results[0].map(choice => choice.title);
+                return choiceArr;
+            }
         },
         {
             type: 'input',
@@ -112,8 +117,11 @@ addEmployee = () => {
             name: 'employeeManager'
         },
     ]) .then((data) => {
-        const employee = new Employee(somethinghere);
-        allEmployees.push(employee);
+        db.query(
+            `INSERT INTO employee(first_name, last_name, role_id, manager_id) 
+            VALUES(?, ?, (SELECT id FROM employee_role WHERE title = ?),
+            (SELECT id FROM (SELECT id FROM employee_role WHERE CONCAT(first_name," ",last_name) = ? ) AS emptable))`, [data.first_name, data.last_name, data.role, data.manager]
+        )
         mainPrompt();
     })
 }
