@@ -51,26 +51,41 @@ addDepartment = () => {
 }
 
 addRole = () => {
-    inquirer.prompt([
-        {
-            type: 'input',
-            message: 'What is the role name?',
-            name: 'role'
-        },
-        {
-            type: 'input',
-            message: 'What is the salary?',
-            name: 'salary'
-        },
-        {
-            type: 'input',
-            message: 'What is the department for the role?',
-            name: 'roleDepartment'
-        },
-    ]) .then((data) => {
-        const role = new Role(somethinghere);
-        allEmployees.push(role);
-        mainPrompt();
+    db.query(`SELECT * FROM department`, function (err, res) {
+        if (err) throw err;
+        
+        inquirer.prompt([
+            {
+                type: 'input',
+                message: 'What is the role name?',
+                name: 'role'
+            },
+            {
+                type: 'input',
+                message: 'What is the salary?',
+                name: 'salary'
+            },
+            {
+                type: 'input',
+                message: 'What is the department for the role?',
+                name: 'roleDepartment'
+            },
+            {
+                type: 'list',
+                name: 'dept',
+                choices: function () {
+                    const choiceArr = data[1].map(choice => choice.department_name);
+                    return choiceArr;
+                },
+                message: 'Select the department'
+            }
+        ]) .then((data) => {
+                db.query(`INSERT INTO employee_role(title, salary, department_id)
+                VALUES ("${data.role}", "${data.salary}",
+                (SELECT id FROM departments WHERE department_name = "${data.dept}"));`
+                )
+            mainPrompt();
+        })
     })
 }
 
