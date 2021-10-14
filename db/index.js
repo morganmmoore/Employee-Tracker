@@ -12,29 +12,39 @@ mainPrompt = () => {
             type: 'list',
             message: 'Please select one of the following: ',
             name: 'main',
-            choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'Add an employee', 'Update an employee role'],
+            choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'Add an employee', 'Update an employee role', 'Done'],
         },
     ]) .then((data) => {
-        if (data.main === 'View all departments') {
-            //view all departments code
-        } else if (data.main === 'View all roles') {
-            //view all roles code
-        } else if (data.main === 'View all employees') {
-            //view all employees code
-        } else if (data.main === 'Add a department') {
-            addDepartment();
-        } else if (data.main === 'Add a role') {
-            addRole();
-        } else if (data.main === 'Add an employee') {
-            addEmployee();
-        } else if (data.main === 'Update an employee role') {
-            updateRole();
+        switch(data.main) {
+            case 'View all departments':
+                showDepartments();
+                break;
+            case 'View all roles':
+                showRoles();
+                break;
+            case 'View all employees':
+                showEmployees();
+                break;
+            case 'Add a department':
+                addDepartment();
+                break;
+            case 'Add a role':
+                addRole();
+                break;
+            case 'Add an employee':
+                addEmployee();
+                break;
+            case 'Update an employee role':
+                updateRole();
+                break;
+            case 'Done':
+                return;
         }
     })
 }
 
 addDepartment = () => {
-    db.query(`SELECT department_name AS "Departments" FROM department`, (err, res) => {
+    db.query(`SELECT department_name AS "Department" FROM department`, (err, res) => {
         if (err) throw err;
 
         inquirer.prompt([
